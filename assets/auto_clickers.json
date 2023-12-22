@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Garagenband Georg",
+    "cps": 0.1,
+    "price": 10,
+    "iconPath": "assets/auto_clickers/garagenband-georg.png"
+  },
+  {
+    "name": "Kneipen Klaus",
+    "cps": 0.5,
+    "price": 40,
+    "iconPath": "assets/auto_clickers/kneipen-klaus.png"
+  },
+  {
+    "name": "Studio Stefan",
+    "cps": 2.0,
+    "price": 100,
+    "iconPath": "assets/auto_clickers/studio-stefan.png"
+  },
+  {
+    "name": "Chart Tina",
+    "cps": 10.0,
+    "price": 400,
+    "iconPath": "assets/auto_clickers/chart-tina.png"
+  },
+  {
+    "name": "Arena Anna",
+    "cps": 50.0,
+    "price": 1000,
+    "iconPath": "assets/auto_clickers/arena-anna.png"
+  },
+  {
+    "name": "Ruhmeshallen Rudi",
+    "cps": 1000.0,
+    "price": 10000,
+    "iconPath": "assets/auto_clickers/ruhmeshallen-rudi.png"
+  }
+]
