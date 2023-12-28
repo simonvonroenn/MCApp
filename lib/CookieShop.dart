@@ -60,7 +60,8 @@ class _CookieShopState extends State<CookieShop> {
                           Text(
                             autoClicker.name,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                                fontWeight: FontWeight.bold, fontSize: 16
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           Text(

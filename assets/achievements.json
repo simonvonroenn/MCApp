@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Erster Gig",
+    "description": "Sammle 100 Cookies",
+    "value": 100
+  },
+  {
+    "name": "Lokaler Held",
+    "description": "Sammle 500 Cookies",
+    "value": 500
+  },
+  {
+    "name": "Süßwaren-Studio-Star",
+    "description": "Sammle 1000 Cookies",
+    "value": 1000
+  },
+  {
+    "name": "Cookie-Chartstürmer",
+    "description": "Sammle 5000 Cookies",
+    "value": 5000
+  },
+  {
+    "name": "Festival der Aromen",
+    "description": "Sammle 10000 Cookies",
+    "value": 10000
+  },
+  {
+    "name": "Backlegende",
+    "description": "Sammle 100000 Cookies",
+    "value": 100000
+  }
+]

@@ -99,3 +99,5 @@ flutter:
     - assets/auto_clickers/chart-tina.png
     - assets/auto_clickers/arena-anna.png
     - assets/auto_clickers/ruhmeshallen-rudi.png
+    - assets/achievements.json
+    - assets/achievements.png

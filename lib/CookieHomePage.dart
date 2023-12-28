@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mc_app/AchievementsView.dart';
 
+import 'Achievement.dart';
 import 'AutoClicker.dart';
 import 'CookieShop.dart';
 
@@ -19,13 +21,16 @@ class _CookieHomePageState extends State<CookieHomePage> {
   final Duration _animationDuration = const Duration(milliseconds: 50);
   double _cookiesPerTick = 0;
   List<AutoClicker> _autoClickers = [];
+  List<Achievement> _achievements = [];
 
   @override
   void initState() {
     super.initState();
     _loadAutoClickers();
+    _loadAchievements();
     Timer.periodic(const Duration(milliseconds: 100), (Timer t) {
       _incrementCookiesAutomatically();
+      _checkAchievements();
     });
   }
 
@@ -38,10 +43,27 @@ class _CookieHomePageState extends State<CookieHomePage> {
     });
   }
 
+  Future<void> _loadAchievements() async {
+    String jsonString = await rootBundle.loadString('assets/achievements.json');
+    setState(() {
+      _achievements = (json.decode(jsonString) as List)
+          .map((i) => Achievement.fromJson(i))
+          .toList();
+    });
+  }
+
   void _incrementCookiesAutomatically() {
     setState(() {
       _cookieCount += _cookiesPerTick;
     });
+  }
+
+  void _checkAchievements() {
+    for (Achievement achievement in _achievements) {
+      if (_cookieCount >= achievement.value) {
+        achievement.fulfilled = true;
+      }
+    }
   }
 
   void _incrementCookie() {
@@ -134,24 +156,52 @@ class _CookieHomePageState extends State<CookieHomePage> {
           ),
         ],
       ),
-      floatingActionButton: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white,
-              spreadRadius: 0,
-              blurRadius: 50,
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Positioned(
+            bottom: 10,
+            right: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    spreadRadius: 0,
+                    blurRadius: 40,
+                  ),
+                ],
+              ),
+              child: IconButton(
+                iconSize: 100,
+                icon: Image.asset('assets/cookie-shop.png'),
+                onPressed: () => _showCookieShop(context),
+              ),
             ),
-          ],
-        ),
-        child: IconButton(
-          iconSize: 150,
-          icon: Image.asset('assets/cookie-shop.png'),
-          onPressed: () => _showCookieShop(context),
-        ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 10,
+            child: Container(
+              decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.white,
+                    spreadRadius: 0,
+                    blurRadius: 40,
+                  ),
+                ],
+              ),
+              child: IconButton(
+                iconSize: 100,
+                icon: Image.asset('assets/achievements.png'),
+                onPressed: () => _showAchievements(context),
+              ),
+            ),
+         ),
+        ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -166,6 +216,18 @@ class _CookieHomePageState extends State<CookieHomePage> {
             //Navigator.of(context).pop(); // Optional: Schließt den Shop nach dem Kauf
             _buyAutoClicker(autoClicker);
           },
+        );
+      },
+    );
+  }
+
+  void _showAchievements(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return AchievementsView(
+          achievements: _achievements,
         );
       },
     );
