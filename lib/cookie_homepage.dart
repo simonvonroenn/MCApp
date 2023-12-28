@@ -22,16 +22,24 @@ class _CookieHomePageState extends State<CookieHomePage> {
   final double _clickedSize = 330;
   final Duration _animationDuration = const Duration(milliseconds: 50);
   final double _priceIncrement = 1.3;
+  final int _headbangBoostIncrement = 2;
+  double _headbangBoostPriceIncrement = 2.0;
   double _cookiesPerTick = 0;
+  int _headbangBoost = 1;
+  int _headbangBoostPrice = 100;
   List<AutoClicker> _autoClickers = [];
   List<Achievement> _achievements = [];
-  ValueNotifier<List<Achievement>> _achievementsNotifier = ValueNotifier<List<Achievement>>([]);
-  ValueNotifier<List<AutoClicker>> _autoClickersNotifier = ValueNotifier<List<AutoClicker>>([]);
+  late ValueNotifier<List<Achievement>> _achievementsNotifier;
+  late ValueNotifier<List<AutoClicker>> _autoClickersNotifier;
+  late ValueNotifier<int> _headbangBoostNotifier;
+  late ValueNotifier<int> _headbangBoostPriceNotifier;
 
 
   @override
   void initState() {
     super.initState();
+    _headbangBoostNotifier = ValueNotifier<int>(_headbangBoost);
+    _headbangBoostPriceNotifier = ValueNotifier<int>(_headbangBoostPrice);
     _loadAutoClickers();
     _loadAchievements();
     Timer.periodic(const Duration(milliseconds: 100), (Timer t) {
@@ -77,7 +85,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
 
   void _incrementCookie() {
     setState(() {
-      _cookieCount++;
+      _cookieCount += _headbangBoost;
       _cookieSize = _clickedSize;
     });
 
@@ -97,6 +105,19 @@ class _CookieHomePageState extends State<CookieHomePage> {
         autoClicker.price = (autoClicker.price.toDouble() * _priceIncrement).toInt();
       });
       _autoClickersNotifier.value = List.from(_autoClickers);
+    }
+  }
+
+  void _buyHeadbangBoost() {
+    if (_cookieCount >= _headbangBoostPrice) {
+      setState(() {
+        _cookieCount -= _headbangBoostPrice;
+        _headbangBoost *= _headbangBoostIncrement;
+        _headbangBoostPrice = (_headbangBoostPrice.toDouble() * _headbangBoostPriceIncrement).toInt();
+        _headbangBoostPriceIncrement += 0.1 * _headbangBoostPriceIncrement; // Increment the increment
+      });
+      _headbangBoostNotifier.value = _headbangBoost;
+      _headbangBoostPriceNotifier.value = _headbangBoostPrice;
     }
   }
 
@@ -157,7 +178,18 @@ class _CookieHomePageState extends State<CookieHomePage> {
                       duration: _animationDuration,
                       width: _cookieSize,
                       height: _cookieSize,
-                      margin: const EdgeInsets.only(bottom: 100), // Move cookie upwards
+                      margin: const EdgeInsets.only(bottom: 150), // Move cookie upwards
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.5),
+                            spreadRadius: 20,
+                            blurRadius: 40,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
                       child: Image.asset('assets/cookie.png'),
                     ),
                   ),
@@ -227,6 +259,9 @@ class _CookieHomePageState extends State<CookieHomePage> {
             //Navigator.of(context).pop(); // Optional: Closes the shop after purchase
             _buyAutoClicker(autoClicker);
           },
+          headbangBoostNotifier: _headbangBoostNotifier,
+          headbangBoostPriceNotifier: _headbangBoostPriceNotifier,
+          onBuyHeadbangBoost: _buyHeadbangBoost,
         );
       },
     );

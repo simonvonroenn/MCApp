@@ -92,6 +92,7 @@ flutter:
     - assets/cookie.png
     - assets/background.png
     - assets/cookie-shop.png
+    - assets/headbang-boost.png
     - assets/auto_clickers.json
     - assets/auto_clickers/garagen-georg.png
     - assets/auto_clickers/kneipen-klaus.png
