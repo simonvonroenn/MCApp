@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Achievement.dart'; // Importieren Sie die Achievement-Klasse
+import 'Achievement.dart';
 
 class AchievementsView extends StatefulWidget {
   final ValueNotifier<List<Achievement>> achievementsNotifier;
@@ -55,10 +55,11 @@ class _AchievementViewState extends State<AchievementsView> {
                 Container(
                   width: screenWidth * 0.25,
                   alignment: Alignment.center,
-                  child: Checkbox(
-                    value: isFulfilled,
-                    onChanged: (bool? value) {},
-                  ),
+                  child: Icon(
+                      isFulfilled ? Icons.check_circle : Icons.circle_rounded,
+                    color: isFulfilled ? Colors.green : Colors.grey,
+                    size: 50,
+                  )
                 ),
                 // Name and Description Column
                 Container(

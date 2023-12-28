@@ -19,6 +19,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
   double _cookieSize = 300;
   final double _clickedSize = 330;
   final Duration _animationDuration = const Duration(milliseconds: 50);
+  final double _priceIncrement = 1.3;
   double _cookiesPerTick = 0;
   List<AutoClicker> _autoClickers = [];
   List<Achievement> _achievements = [];
@@ -91,6 +92,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
         _cookieCount -= autoClicker.price;
         _cookiesPerTick += autoClicker.cps / 10;
         autoClicker.level++;
+        autoClicker.price = (autoClicker.price.toDouble() * _priceIncrement).toInt();
       });
       _autoClickersNotifier.value = List.from(_autoClickers);
     }
