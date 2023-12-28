@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'CookieHomePage.dart';
+import 'cookie_homepage.dart';
 
-void main() => runApp(CookieClickerApp());
+void main() => runApp(const CookieClickerApp());
 
 class CookieClickerApp extends StatelessWidget {
+  const CookieClickerApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Rockstar Cookie Clicker',
       home: CookieHomePage(),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'AutoClicker.dart';
+import 'auto_clicker.dart';
 
 class CookieShop extends StatefulWidget {
   final ValueNotifier<List<AutoClicker>> autoClickersNotifier;
@@ -9,7 +9,7 @@ class CookieShop extends StatefulWidget {
   const CookieShop({Key? key, required this.autoClickersNotifier, required this.onBuy}) : super(key: key);
 
   @override
-  _CookieShopState createState() => _CookieShopState();
+  State<CookieShop> createState() => _CookieShopState();
 }
 
 class _CookieShopState extends State<CookieShop> {

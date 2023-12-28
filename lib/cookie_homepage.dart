@@ -3,15 +3,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mc_app/AchievementsView.dart';
+import 'package:mc_app/achievements_view.dart';
 
-import 'Achievement.dart';
-import 'AutoClicker.dart';
-import 'CookieShop.dart';
+import 'achievement.dart';
+import 'auto_clicker.dart';
+import 'cookie_shop.dart';
 
 class CookieHomePage extends StatefulWidget {
+  const CookieHomePage({super.key});
+
   @override
-  _CookieHomePageState createState() => _CookieHomePageState();
+  State<CookieHomePage> createState() => _CookieHomePageState();
 }
 
 class _CookieHomePageState extends State<CookieHomePage> {

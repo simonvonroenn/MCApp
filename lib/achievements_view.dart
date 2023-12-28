@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Achievement.dart';
+import 'achievement.dart';
 
 class AchievementsView extends StatefulWidget {
   final ValueNotifier<List<Achievement>> achievementsNotifier;
@@ -7,7 +7,7 @@ class AchievementsView extends StatefulWidget {
   const AchievementsView({Key? key, required this.achievementsNotifier}) : super(key: key);
 
   @override
-  _AchievementViewState createState() => _AchievementViewState();
+  State<AchievementsView> createState() => _AchievementViewState();
 }
 
 class _AchievementViewState extends State<AchievementsView> {
@@ -80,12 +80,12 @@ class _AchievementViewState extends State<AchievementsView> {
                           alignment: Alignment.center,
                           child: Icon(
                             isFulfilled ? Icons.check_circle : Icons.circle_rounded,
-                            color: isFulfilled ? Colors.green : Colors.grey,
+                            color: isFulfilled ? Colors.black : Colors.grey,
                             size: 70,
                           )
                       ),
                       // Name and Description Column
-                      Container(
+                      SizedBox(
                         width: screenWidth * 0.75,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
