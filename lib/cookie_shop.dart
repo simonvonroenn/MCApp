@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'auto_clicker.dart';
 
 class CookieShop extends StatefulWidget {
+  final ScrollController _scrollController = ScrollController();
+
   final ValueNotifier<List<AutoClicker>> autoClickersNotifier;
   final Function(AutoClicker) onBuy;
   final ValueNotifier<int> headbangBoostNotifier;
   final ValueNotifier<int> headbangBoostPriceNotifier;
   final Function onBuyHeadbangBoost;
 
-  const CookieShop({
+  CookieShop({
     Key? key,
     required this.autoClickersNotifier,
     required this.onBuy,
@@ -39,6 +41,7 @@ class _CookieShopState extends State<CookieShop> {
 
   @override
   void dispose() {
+    widget._scrollController.dispose();
     widget.autoClickersNotifier.removeListener(_onChange);
     widget.headbangBoostNotifier.removeListener(_onChange);
     widget.headbangBoostPriceNotifier.removeListener(_onChange);
@@ -84,8 +87,8 @@ class _CookieShopState extends State<CookieShop> {
           ),
           Expanded(
             child: ListView.builder(
-              key: UniqueKey(),
-              itemCount: widget.autoClickersNotifier.value.length,
+              controller: widget._scrollController,
+              itemCount: widget.autoClickersNotifier.value.length + 1,
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return Padding(

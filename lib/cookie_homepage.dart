@@ -17,7 +17,7 @@ class CookieHomePage extends StatefulWidget {
 }
 
 class _CookieHomePageState extends State<CookieHomePage> {
-  double _cookieCount = 0;
+  double _cookieCount = 10000;
   double _cookieSize = 300;
   final double _clickedSize = 330;
   final Duration _animationDuration = const Duration(milliseconds: 50);
@@ -33,7 +33,6 @@ class _CookieHomePageState extends State<CookieHomePage> {
   late ValueNotifier<List<AutoClicker>> _autoClickersNotifier;
   late ValueNotifier<int> _headbangBoostNotifier;
   late ValueNotifier<int> _headbangBoostPriceNotifier;
-
 
   @override
   void initState() {

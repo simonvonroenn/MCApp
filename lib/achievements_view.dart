@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'achievement.dart';
 
 class AchievementsView extends StatefulWidget {
+  final ScrollController _scrollController = ScrollController();
+
   final ValueNotifier<List<Achievement>> achievementsNotifier;
 
-  const AchievementsView({Key? key, required this.achievementsNotifier}) : super(key: key);
+  AchievementsView({
+    Key? key,
+    required this.achievementsNotifier
+  }) : super(key: key);
 
   @override
   State<AchievementsView> createState() => _AchievementViewState();
@@ -25,6 +30,7 @@ class _AchievementViewState extends State<AchievementsView> {
 
   @override
   void dispose() {
+    widget._scrollController.dispose();
     widget.achievementsNotifier.removeListener(_onAchievementsChanged);
     super.dispose();
   }
@@ -65,6 +71,7 @@ class _AchievementViewState extends State<AchievementsView> {
           ),
           Expanded(
             child: ListView.builder(
+              controller: widget._scrollController,
               itemCount: widget.achievementsNotifier.value.length,
               itemBuilder: (context, index) {
                 Achievement achievement = widget.achievementsNotifier.value[index];
