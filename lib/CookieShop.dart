@@ -3,16 +3,34 @@ import 'package:flutter/material.dart';
 import 'AutoClicker.dart';
 
 class CookieShop extends StatefulWidget {
-  final List<AutoClicker> autoClickers;
+  final ValueNotifier<List<AutoClicker>> autoClickersNotifier;
   final Function(AutoClicker) onBuy;
 
-  const CookieShop({Key? key, required this.autoClickers, required this.onBuy}) : super(key: key);
+  const CookieShop({Key? key, required this.autoClickersNotifier, required this.onBuy}) : super(key: key);
 
   @override
   _CookieShopState createState() => _CookieShopState();
 }
 
 class _CookieShopState extends State<CookieShop> {
+  @override
+  void initState() {
+    super.initState();
+    widget.autoClickersNotifier.addListener(_onAutoClickersChanged);
+  }
+
+  void _onAutoClickersChanged() {
+    setState(() {
+      // Forces the widget to reload
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.autoClickersNotifier.removeListener(_onAutoClickersChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery
@@ -33,9 +51,9 @@ class _CookieShopState extends State<CookieShop> {
       ),
       child: ListView.builder(
         key: UniqueKey(),
-        itemCount: widget.autoClickers.length,
+        itemCount: widget.autoClickersNotifier.value.length,
         itemBuilder: (context, index) {
-          AutoClicker autoClicker = widget.autoClickers[index];
+          AutoClicker autoClicker = widget.autoClickersNotifier.value[index];
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: InkWell(

@@ -2,15 +2,33 @@ import 'package:flutter/material.dart';
 import 'Achievement.dart'; // Importieren Sie die Achievement-Klasse
 
 class AchievementsView extends StatefulWidget {
-  final List<Achievement> achievements;
+  final ValueNotifier<List<Achievement>> achievementsNotifier;
 
-  const AchievementsView({Key? key, required this.achievements}) : super(key: key);
+  const AchievementsView({Key? key, required this.achievementsNotifier}) : super(key: key);
 
   @override
   _AchievementViewState createState() => _AchievementViewState();
 }
 
 class _AchievementViewState extends State<AchievementsView> {
+  @override
+  void initState() {
+    super.initState();
+    widget.achievementsNotifier.addListener(_onAchievementsChanged);
+  }
+
+  void _onAchievementsChanged() {
+    setState(() {
+      // Forces the widget to reload
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.achievementsNotifier.removeListener(_onAchievementsChanged);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -24,9 +42,9 @@ class _AchievementViewState extends State<AchievementsView> {
         ),
       ),
       child: ListView.builder(
-        itemCount: widget.achievements.length,
+        itemCount: widget.achievementsNotifier.value.length,
         itemBuilder: (context, index) {
-          Achievement achievement = widget.achievements[index];
+          Achievement achievement = widget.achievementsNotifier.value[index];
           bool isFulfilled = achievement.fulfilled;
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),

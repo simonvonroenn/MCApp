@@ -22,6 +22,9 @@ class _CookieHomePageState extends State<CookieHomePage> {
   double _cookiesPerTick = 0;
   List<AutoClicker> _autoClickers = [];
   List<Achievement> _achievements = [];
+  ValueNotifier<List<Achievement>> _achievementsNotifier = ValueNotifier<List<Achievement>>([]);
+  ValueNotifier<List<AutoClicker>> _autoClickersNotifier = ValueNotifier<List<AutoClicker>>([]);
+
 
   @override
   void initState() {
@@ -41,6 +44,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
           .map((i) => AutoClicker.fromJson(i))
           .toList();
     });
+    _autoClickersNotifier = ValueNotifier<List<AutoClicker>>(_autoClickers);
   }
 
   Future<void> _loadAchievements() async {
@@ -50,6 +54,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
           .map((i) => Achievement.fromJson(i))
           .toList();
     });
+    _achievementsNotifier = ValueNotifier<List<Achievement>>(_achievements);
   }
 
   void _incrementCookiesAutomatically() {
@@ -60,8 +65,9 @@ class _CookieHomePageState extends State<CookieHomePage> {
 
   void _checkAchievements() {
     for (Achievement achievement in _achievements) {
-      if (_cookieCount >= achievement.value) {
+      if (_cookieCount >= achievement.value && !achievement.fulfilled) {
         achievement.fulfilled = true;
+        _achievementsNotifier.value = List.from(_achievements);
       }
     }
   }
@@ -86,6 +92,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
         _cookiesPerTick += autoClicker.cps / 10;
         autoClicker.level++;
       });
+      _autoClickersNotifier.value = List.from(_autoClickers);
     }
   }
 
@@ -211,9 +218,9 @@ class _CookieHomePageState extends State<CookieHomePage> {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return CookieShop(
-          autoClickers: _autoClickers,
+          autoClickersNotifier: _autoClickersNotifier,
           onBuy: (autoClicker) {
-            //Navigator.of(context).pop(); // Optional: Schließt den Shop nach dem Kauf
+            //Navigator.of(context).pop(); // Optional: Closes the shop after purchase
             _buyAutoClicker(autoClicker);
           },
         );
@@ -227,7 +234,7 @@ class _CookieHomePageState extends State<CookieHomePage> {
       backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return AchievementsView(
-          achievements: _achievements,
+            achievementsNotifier: _achievementsNotifier
         );
       },
     );
