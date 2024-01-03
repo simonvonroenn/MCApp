@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mc_app/achievements_view.dart';
+import 'package:mc_app/increment_animation.dart';
 
 import 'achievement.dart';
 import 'auto_clicker.dart';
@@ -16,11 +18,11 @@ class CookieHomePage extends StatefulWidget {
   State<CookieHomePage> createState() => _CookieHomePageState();
 }
 
-class _CookieHomePageState extends State<CookieHomePage> {
+class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStateMixin {
   bool useEarable = true;
   double _cookieCount = 10000;
-  double _cookieSize = 300;
-  final double _clickedSize = 330;
+  final double _cookieSizeInit = 300;
+  final double _cookieSizeClicked = 330;
   final Duration _animationDuration = const Duration(milliseconds: 50);
   final double _priceIncrement = 1.3;
   final int _headbangBoostIncrement = 2;
@@ -30,6 +32,8 @@ class _CookieHomePageState extends State<CookieHomePage> {
   int _headbangBoostPrice = 100;
   List<AutoClicker> _autoClickers = [];
   List<Achievement> _achievements = [];
+  final List<IncrementAnimation> _incrementAnimations = [];
+  late double _cookieSize = _cookieSizeInit;
   late ValueNotifier<List<Achievement>> _achievementsNotifier;
   late ValueNotifier<List<AutoClicker>> _autoClickersNotifier;
   late ValueNotifier<int> _headbangBoostNotifier;
@@ -86,12 +90,14 @@ class _CookieHomePageState extends State<CookieHomePage> {
   void _incrementCookie() {
     setState(() {
       _cookieCount += _headbangBoost;
-      _cookieSize = _clickedSize;
+      _cookieSize = _cookieSizeClicked;
     });
+
+    _createIncrementAnimation();
 
     Future.delayed(_animationDuration, () {
       setState(() {
-        _cookieSize = 300;
+        _cookieSize = _cookieSizeInit;
       });
     });
   }
@@ -119,6 +125,41 @@ class _CookieHomePageState extends State<CookieHomePage> {
       _headbangBoostNotifier.value = _headbangBoost;
       _headbangBoostPriceNotifier.value = _headbangBoostPrice;
     }
+  }
+
+  void _createIncrementAnimation() {
+    String value = "+$_headbangBoost";
+
+    final radius = Random().nextInt((_cookieSizeInit / 2 - 50).toInt());
+    final angle = Random().nextDouble() * 2 * pi;
+    final offset = Offset(cos(angle) * radius, sin(angle) * radius);
+
+    final controller = AnimationController(duration: const Duration(seconds: 1), vsync: this);
+    final animation = Tween(begin: 1.0, end: 0.0).animate(controller);
+
+    controller.forward();
+
+    setState(() {
+      _incrementAnimations.add(IncrementAnimation(value: value, controller: controller, fadeOutAnimation: animation, position: offset));
+    });
+
+    // Delete animation when finished
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          _incrementAnimations.removeAt(0);
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose all animation controllers
+    for (var animation in _incrementAnimations) {
+      animation.controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -186,27 +227,48 @@ class _CookieHomePageState extends State<CookieHomePage> {
   Expanded _buildBody() {
     return Expanded(
       child: Center(
-        child: GestureDetector(
-          onTap: _incrementCookie,
-          child: AnimatedContainer(
-            duration: _animationDuration,
-            width: _cookieSize,
-            height: _cookieSize,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.5),
-                  spreadRadius: 20,
-                  blurRadius: 40,
-                  offset: const Offset(0, 0),
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: _incrementCookie,
+              child: AnimatedContainer(
+                duration: _animationDuration,
+                width: _cookieSize,
+                height: _cookieSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white.withOpacity(0.5),
+                      spreadRadius: 20,
+                      blurRadius: 40,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
                 ),
-              ],
+                child: Image.asset('assets/cookie.png'),
+              ),
             ),
-            child: Image.asset('assets/cookie.png'),
-          ),
+            ..._incrementAnimations.map((animation) {
+              return Positioned(
+                top: _cookieSizeInit / 2 + animation.position.dy,
+                left: _cookieSizeInit / 2 + animation.position.dx,
+                child: FadeTransition(
+                  opacity: animation.fadeOutAnimation,
+                  child: Text(
+                    animation.value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ],
         ),
-      ),
+      )
     );
   }
 
