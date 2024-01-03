@@ -136,201 +136,211 @@ class _CookieHomePageState extends State<CookieHomePage> {
           ),
           Column(
             children: [
-              Container(
-                width: double.infinity,
-                color: Colors.black45,
-                padding: const EdgeInsets.only(top: 50, bottom: 10, left: 15, right: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text.rich(
-                      TextSpan(
-                        text: '${_cookieCount.toInt()} Cookies',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32, shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.lightBlueAccent,
-                            offset: Offset(0, 0),
-                          ),
-                        ]),
-                      ),
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      '${(_cookiesPerTick * 10).toStringAsFixed(1)} CPS',
-                      style: const TextStyle(color: Colors.white, fontSize: 20, shadows: [
-                        Shadow(
-                          blurRadius: 5.0,
-                          color: Colors.lightBlueAccent,
-                          offset: Offset(0, 0),
-                        ),
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: GestureDetector(
-                    onTap: _incrementCookie,
-                    child: AnimatedContainer(
-                      duration: _animationDuration,
-                      width: _cookieSize,
-                      height: _cookieSize,
-                      margin: const EdgeInsets.only(bottom: 150), // Move cookie upwards
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(0.5),
-                            spreadRadius: 20,
-                            blurRadius: 40,
-                            offset: const Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                      child: Image.asset('assets/cookie.png'),
-                    ),
-                  ),
-                ),
-              ),
+              buildHeader(),
+              buildBody(),
+              buildFooter(),
             ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              height: 250,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.white, Colors.white.withOpacity(0)],
-                ),
-              ),
-              // Hier können Sie zusätzliche Inhalte hinzufügen, falls gewünscht
-            ),
           ),
         ],
       ),
-      floatingActionButton: Stack(
+    );
+  }
+
+  Container buildHeader() {
+    return Container(
+      width: double.infinity,
+      color: Colors.black45,
+      padding: const EdgeInsets.only(top: 50, bottom: 10, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Positioned(
-            bottom: 0,
-            left: 20,
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white,
-                        spreadRadius: 0,
-                        blurRadius: 40,
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    iconSize: 100,
-                    icon: Image.asset('assets/achievements.png'),
-                    onPressed: () => _showAchievements(context),
-                  ),
+          Text.rich(
+            TextSpan(
+              text: '${_cookieCount.toInt()} Cookies',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 32, shadows: [
+                Shadow(
+                  blurRadius: 5.0,
+                  color: Colors.lightBlueAccent,
+                  offset: Offset(0, 0),
                 ),
-                const Text(
-                  'Achievements',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ]),
+            ),
+            style: const TextStyle(color: Colors.white),
+          ),
+          Text(
+            '${(_cookiesPerTick * 10).toStringAsFixed(1)} CPS',
+            style: const TextStyle(color: Colors.white, fontSize: 20, shadows: [
+              Shadow(
+                blurRadius: 5.0,
+                color: Colors.lightBlueAccent,
+                offset: Offset(0, 0),
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Expanded buildBody() {
+    return Expanded(
+      child: Center(
+        child: GestureDetector(
+          onTap: _incrementCookie,
+          child: AnimatedContainer(
+            duration: _animationDuration,
+            width: _cookieSize,
+            height: _cookieSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.5),
+                  spreadRadius: 20,
+                  blurRadius: 40,
+                  offset: const Offset(0, 0),
                 ),
               ],
             ),
+            child: Image.asset('assets/cookie.png'),
           ),
-          Positioned(
-            bottom: 20,
-            left: MediaQuery.of(context).size.width / 2 - 50,
-            child: Container(
-              width: 120,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white,
-                    spreadRadius: 40,
-                    blurRadius: 40,
-                  ),
-                ],
-              ),
+        ),
+      ),
+    );
+  }
+
+  Align buildFooter() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: double.infinity,
+        height: 250,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          gradient: LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [Colors.white, Colors.white.withOpacity(0)],
+          ),
+        ),
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              bottom: 10,
+              left: 10,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 40,
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      iconSize: 100,
+                      icon: Image.asset('assets/achievements.png'),
+                      onPressed: () => _showAchievements(context),
+                    ),
+                  ),
                   const Text(
-                    'Use Earable',
-                    textAlign: TextAlign.center,
+                    'Achievements',
+                    textAlign: TextAlign.right,
                     style: TextStyle(
                       color: Colors.black87,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Transform.scale(
-                    scale: 1.3,
-                    child: Switch(
-                      value: useEarable,
-                      onChanged: (bool value) {
-                        setState(() {
-                          useEarable = value;
-                        });
-                      },
-                      activeTrackColor: const Color(0xfffcca4b),
-                      activeColor: Colors.black87,
-                      inactiveThumbColor: Colors.black87,
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              left: MediaQuery.of(context).size.width / 2 - 60,
+              child: Container(
+                width: 120,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white,
+                      spreadRadius: 40,
+                      blurRadius: 40,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Use Earable',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Transform.scale(
+                      scale: 1.3,
+                      child: Switch(
+                        value: useEarable,
+                        onChanged: (bool value) {
+                          setState(() {
+                            useEarable = value;
+                          });
+                        },
+                        activeTrackColor: const Color(0xfffcca4b),
+                        activeColor: Colors.black87,
+                        inactiveThumbColor: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Column(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 40,
+                        ),
+                      ],
+                    ),
+                    child: IconButton(
+                      iconSize: 100,
+                      icon: Image.asset('assets/cookie-shop.png'),
+                      onPressed: () => _showCookieShop(context),
+                    ),
+                  ),
+                  const Text(
+                    'Cookie Shop',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white,
-                        spreadRadius: 0,
-                        blurRadius: 40,
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    iconSize: 100,
-                    icon: Image.asset('assets/cookie-shop.png'),
-                    onPressed: () => _showCookieShop(context),
-                  ),
-                ),
-                const Text(
-                  'Cookie Shop',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
