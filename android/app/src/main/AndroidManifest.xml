@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+
+    <queries>
+        <!-- For Android 11 (API 30) and higher -->
+        <intent>
+            <action android:name="android.bluetooth.device.action.PAIRING_REQUEST"/>
+        </intent>
+    </queries>
     <application
         android:label="mc_app"
         android:name="${applicationName}"

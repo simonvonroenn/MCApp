@@ -10,6 +10,7 @@ import 'package:mc_app/increment_animation.dart';
 import 'achievement.dart';
 import 'auto_clicker.dart';
 import 'cookie_shop.dart';
+import 'esense_handler.dart';
 
 class CookieHomePage extends StatefulWidget {
   const CookieHomePage({super.key});
@@ -19,7 +20,8 @@ class CookieHomePage extends StatefulWidget {
 }
 
 class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStateMixin {
-  bool useEarable = true;
+  final ESenseHandler _eSenseHandler = ESenseHandler();
+  bool _useESense = false;
   double _cookieCount = 10000;
   final double _cookieSizeInit = 300;
   final double _cookieSizeClicked = 330;
@@ -42,6 +44,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
   @override
   void initState() {
     super.initState();
+    _eSenseHandler.listenToESense();
     _headbangBoostNotifier = ValueNotifier<int>(_headbangBoost);
     _headbangBoostPriceNotifier = ValueNotifier<int>(_headbangBoostPrice);
     _loadAutoClickers();
@@ -49,6 +52,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     Timer.periodic(const Duration(milliseconds: 100), (Timer t) {
       _incrementCookiesAutomatically();
       _checkAchievements();
+      _checkIncrementCookieByHeadbang();
     });
   }
 
@@ -83,6 +87,15 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
       if (_cookieCount >= achievement.value && !achievement.fulfilled) {
         achievement.fulfilled = true;
         _achievementsNotifier.value = List.from(_achievements);
+      }
+    }
+  }
+
+  void _checkIncrementCookieByHeadbang() {
+    if (_eSenseHandler.isConnected && _useESense) {
+      if (_eSenseHandler.incrementDetected) {
+        _incrementCookie();
+        _eSenseHandler.incrementDetected = false;
       }
     }
   }
@@ -230,7 +243,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
         child: Stack(
           children: [
             GestureDetector(
-              onTap: _incrementCookie,
+              onTap: _eSenseHandler.isConnected ? (_useESense ? null : _incrementCookie) : _incrementCookie,
               child: AnimatedContainer(
                 duration: _animationDuration,
                 width: _cookieSize,
@@ -354,7 +367,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'Use Earable',
+              'Use eSense',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black87,
@@ -365,11 +378,18 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
             Transform.scale(
               scale: 1.3,
               child: Switch(
-                value: useEarable,
+                value: _eSenseHandler.isConnected ? _useESense : false,
                 onChanged: (bool value) {
-                  setState(() {
-                    useEarable = value;
-                  });
+                  if (_eSenseHandler.isConnected) {
+                    if (value) {
+                      _eSenseHandler.startListenToSensorEvents();
+                    } else {
+                      _eSenseHandler.pauseListenToSensorEvents();
+                    }
+                    setState(() {
+                      _useESense = value;
+                    });
+                  }
                 },
                 activeTrackColor: const Color(0xfffcca4b),
                 activeColor: Colors.black87,
