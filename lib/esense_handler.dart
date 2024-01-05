@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:esense_flutter/esense.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Handles the connection and sensor data management regarding the eSense device.
 class ESenseHandler {
   bool isConnected = false;
   bool incrementDetected = false;
@@ -10,6 +11,7 @@ class ESenseHandler {
   final ESenseManager _eSenseManager = ESenseManager(_eSenseDeviceName);
   StreamSubscription? _subscription;
 
+  /// Asks for permission to connect via bluetooth.
   Future<void> _askForPermissions() async {
     if (!(await Permission.bluetoothScan.request().isGranted &&
         await Permission.bluetoothConnect.request().isGranted)) {
@@ -21,6 +23,8 @@ class ESenseHandler {
       }
     }
   }
+
+  /// Listens to the connection status.
   Future<void> listenToESense() async {
     await _askForPermissions();
 
@@ -45,6 +49,7 @@ class ESenseHandler {
     });
   }
 
+  /// Connects the eSense device.
   Future<void> _connectToESense() async {
     if (!isConnected) {
       print('Trying to connect to eSense device...');
@@ -52,6 +57,8 @@ class ESenseHandler {
     }
   }
 
+  /// Gathers the sensor data from the accelerator sensor
+  /// and computes if the user did a headbang.
   Future<void> startListenToSensorEvents() async {
     const int headbangThreshold = 10000;
     const int relevantAxisIndex = 1;
@@ -64,6 +71,7 @@ class ESenseHandler {
     });
   }
 
+  /// Pauses gathering the sensor data from the eSense device.
   void pauseListenToSensorEvents() async {
     _subscription?.cancel();
   }

@@ -4,6 +4,7 @@ import 'cookie_homepage.dart';
 
 void main() => runApp(const CookieClickerApp());
 
+/// The Rockstar Cookie Clicker App.
 class CookieClickerApp extends StatelessWidget {
   const CookieClickerApp({super.key});
 

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'auto_clicker.dart';
 
+/// The view which shows the cookie shop
+/// where the user can buy auto clickers and headbang boosts
+/// after clicking on the icon.
 class CookieShop extends StatefulWidget {
   final ScrollController _scrollController = ScrollController();
 
@@ -11,6 +14,15 @@ class CookieShop extends StatefulWidget {
   final ValueNotifier<int> headbangBoostPriceNotifier;
   final Function onBuyHeadbangBoost;
 
+  /// Creates the cookie shop with
+  /// an [autoClickersNotifier] which contains the auto clickers
+  /// and updates the view if an auto clicker has been bought,
+  /// an [onBuy] method that is called to buy an auto clicker,
+  /// a [headbangBoostNotifier] that holds the current headbang boost
+  /// and notifies when it changes,
+  /// a [headbangBoostPriceNotifier] that holds the current headbang boost price
+  /// and notifies when it changes
+  /// and a [onBuyHeadbangBoost] method that is called to buy a headbang boost.
   CookieShop({
     Key? key,
     required this.autoClickersNotifier,
@@ -24,6 +36,7 @@ class CookieShop extends StatefulWidget {
   State<CookieShop> createState() => _CookieShopState();
 }
 
+/// The state class for [CookieShop].
 class _CookieShopState extends State<CookieShop> {
   @override
   void initState() {
@@ -33,6 +46,7 @@ class _CookieShopState extends State<CookieShop> {
     widget.headbangBoostPriceNotifier.addListener(_onChange);
   }
 
+  /// Forces the widget to reload after an auto clicker or boost has been bought.
   void _onChange() {
     setState(() {
       // Forces the widget to reload
@@ -81,6 +95,7 @@ class _CookieShopState extends State<CookieShop> {
     );
   }
 
+  /// Builds the header that says 'Power Ups'.
   Container _buildHeader() {
     return Container(
       width: double.infinity,
@@ -104,6 +119,7 @@ class _CookieShopState extends State<CookieShop> {
     );
   }
 
+  /// Builds the headbang boost item in the list of power ups.
   Padding _buildHeadbangBoostItem() {
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(
@@ -157,6 +173,7 @@ class _CookieShopState extends State<CookieShop> {
     );
   }
 
+  /// Builds an [autoClicker] item in the list of power ups.
   Padding _buildAutoClickerItem(AutoClicker autoClicker) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Padding(

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'achievement.dart';
 
+/// The view which shows all the achievements
+/// after clicking on the achievement icon.
 class AchievementsView extends StatefulWidget {
   final ScrollController _scrollController = ScrollController();
 
   final ValueNotifier<List<Achievement>> achievementsNotifier;
 
+  /// Creates the view with an [achievementsNotifier]
+  /// which notifies the view when an achievement has been fulfilled.
   AchievementsView({
     Key? key,
     required this.achievementsNotifier
@@ -15,6 +19,7 @@ class AchievementsView extends StatefulWidget {
   State<AchievementsView> createState() => _AchievementViewState();
 }
 
+/// The state class for [AchievementsView].
 class _AchievementViewState extends State<AchievementsView> {
   @override
   void initState() {
@@ -22,6 +27,7 @@ class _AchievementViewState extends State<AchievementsView> {
     widget.achievementsNotifier.addListener(_onAchievementsChanged);
   }
 
+  /// Forces the widget to reload after an achievement has been fulfilled.
   void _onAchievementsChanged() {
     setState(() {
       // Forces the widget to reload
@@ -64,6 +70,7 @@ class _AchievementViewState extends State<AchievementsView> {
     );
   }
 
+  /// Builds the header that says 'Achievements'.
   Container _buildHeader() {
     return Container(
       width: double.infinity,
@@ -87,6 +94,7 @@ class _AchievementViewState extends State<AchievementsView> {
     );
   }
 
+  /// Builds an [achievement] item in the list of achievements.
   Padding _buildAchievementItem(Achievement achievement) {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isFulfilled = achievement.fulfilled;

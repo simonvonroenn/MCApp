@@ -12,6 +12,7 @@ import 'auto_clicker.dart';
 import 'cookie_shop.dart';
 import 'esense_handler.dart';
 
+/// The main view, which opens on start.
 class CookieHomePage extends StatefulWidget {
   const CookieHomePage({super.key});
 
@@ -19,10 +20,11 @@ class CookieHomePage extends StatefulWidget {
   State<CookieHomePage> createState() => _CookieHomePageState();
 }
 
+/// The state class for [CookieHomePage].
 class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStateMixin {
   final ESenseHandler _eSenseHandler = ESenseHandler();
   bool _useESense = false;
-  double _cookieCount = 10000;
+  double _cookieCount = 0;
   final double _cookieSizeInit = 300;
   final double _cookieSizeClicked = 330;
   final Duration _animationDuration = const Duration(milliseconds: 50);
@@ -56,6 +58,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     });
   }
 
+  /// Loads the auto clickers from the json file.
   Future<void> _loadAutoClickers() async {
     String jsonString = await rootBundle.loadString('assets/auto_clickers.json');
     setState(() {
@@ -66,6 +69,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     _autoClickersNotifier = ValueNotifier<List<AutoClicker>>(_autoClickers);
   }
 
+  /// Loads the achievements from the json file.
   Future<void> _loadAchievements() async {
     String jsonString = await rootBundle.loadString('assets/achievements.json');
     setState(() {
@@ -76,12 +80,14 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     _achievementsNotifier = ValueNotifier<List<Achievement>>(_achievements);
   }
 
+  /// Increments the cookies based on the current CPS (cookies per second).
   void _incrementCookiesAutomatically() {
     setState(() {
       _cookieCount += _cookiesPerTick;
     });
   }
 
+  /// Checks whether an achievement has been fulfilled.
   void _checkAchievements() {
     for (Achievement achievement in _achievements) {
       if (_cookieCount >= achievement.value && !achievement.fulfilled) {
@@ -91,6 +97,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     }
   }
 
+  /// Checks if the user did a headbang and increments the cookie count if so.
   void _checkIncrementCookieByHeadbang() {
     if (_eSenseHandler.isConnected && _useESense) {
       if (_eSenseHandler.incrementDetected) {
@@ -100,6 +107,9 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     }
   }
 
+  /// Increments the cookie count,
+  /// visually displays the amount of cookies added
+  /// and lets the cookie increase in size for a short period of time to indicate the click.
   void _incrementCookie() {
     setState(() {
       _cookieCount += _headbangBoost;
@@ -115,6 +125,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     });
   }
 
+  /// Buys and auto clicker.
   void _buyAutoClicker(AutoClicker autoClicker) {
     if (_cookieCount >= autoClicker.price) {
       setState(() {
@@ -127,6 +138,8 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     }
   }
 
+  /// Buys a headbang boost,
+  /// i.e. a multiplier that increases the amount of cookies gained per click.
   void _buyHeadbangBoost() {
     if (_cookieCount >= _headbangBoostPrice) {
       setState(() {
@@ -140,6 +153,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     }
   }
 
+  /// Visually displays the amount of cookies added after clicking the cookie.
   void _createIncrementAnimation() {
     String value = "+$_headbangBoost";
 
@@ -200,6 +214,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Builds the header, i.e. the cookie count and the CPS.
   Container _buildHeader() {
     return Container(
       width: double.infinity,
@@ -237,6 +252,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Builds the body, i.e. the cookie.
   Expanded _buildBody() {
     return Expanded(
       child: Center(
@@ -285,6 +301,8 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Builds the footer,
+  /// i.e. the achievements icon, the switch and the cookie shop icon.
   Align _buildFooter() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -302,7 +320,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
         child: Stack(
           children: <Widget>[
             _buildAchievementsIcon(),
-            _buildEarableSwitch(),
+            _buildEsenseSwitch(),
             _buildCookieShopIcon(),
           ],
         ),
@@ -310,6 +328,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Builds the achievements icon.
   Positioned _buildAchievementsIcon() {
     return Positioned(
       bottom: 10,
@@ -347,7 +366,8 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
-  Positioned _buildEarableSwitch() {
+  /// Builds the switch.
+  Positioned _buildEsenseSwitch() {
     return Positioned(
       bottom: 20,
       left: MediaQuery.of(context).size.width / 2 - 60,
@@ -402,6 +422,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Builds the cookie shop icon.
   Positioned _buildCookieShopIcon() {
     return Positioned(
       bottom: 10,
@@ -439,6 +460,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Shows the cookie shop after clicking on the icon.
   void _showCookieShop(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -458,6 +480,7 @@ class _CookieHomePageState extends State<CookieHomePage> with TickerProviderStat
     );
   }
 
+  /// Shows the achievements view after clicking on the icon.
   void _showAchievements(BuildContext context) {
     showModalBottomSheet(
       context: context,
